@@ -1,4 +1,4 @@
-class AttendancesController < ApplicationController
+class V1::AttendancesController < ApplicationController
   before_action :set_attendance, only: [:show, :update, :destroy]
 
   # GET /attendances
@@ -34,7 +34,7 @@ class AttendancesController < ApplicationController
 
   def attendance_params
     # whitelist params
-    params.permit(:checkin, :checkout)
+    params.permit(:checkin, :checkout, :user_id)
   end
 
   def set_attendance

@@ -4,11 +4,14 @@ RSpec.describe 'Attendances API', type: :request do
   # initialize test data 
   let!(:attendances) { create_list(:attendance, 10) }
   let(:attendance_id) { attendances.first.id }
+  let(:user) { create(:user) }
+
+  let(:headers) { valid_headers }
 
   # Test suite for GET /attendances
   describe 'GET /attendances' do
     # make HTTP get request before each example
-    before { get '/attendances' }
+    before { get '/attendances', params: {}, headers: headers  }
 
     it 'returns attendances' do
       # Note `json` is a custom helper to parse JSON responses
@@ -23,7 +26,7 @@ RSpec.describe 'Attendances API', type: :request do
 
   # Test suite for GET /attendances/:id
   describe 'GET /attendances/:id' do
-    before { get "/attendances/#{attendance_id}" }
+    before { get "/attendances/#{attendance_id}", params: {}, headers: headers  }
 
     context 'when the record exists' do
       it 'returns the attendance' do
@@ -52,13 +55,15 @@ RSpec.describe 'Attendances API', type: :request do
   # Test suite for POST /attendances
   describe 'POST /attendances' do
     # valid payload
-    let(:valid_attributes) { { checkin: DateTime.now.beginning_of_day } }
-
+    let(:valid_attributes) do
+      { checkin: DateTime.now.beginning_of_day, user_id: user.id.to_s }.to_json
+    end
     context 'when the request is valid' do
-      before { post '/attendances', params: valid_attributes }
+      before { post '/attendances', params: valid_attributes, headers: headers  }
 
       it 'creates a attendance' do
         expect(json['checkin']).to eq(DateTime.now.beginning_of_day.utc.iso8601(3))
+        expect(json['user_id']).to eq(user.id)
       end
 
       it 'returns status code 201' do
@@ -67,7 +72,8 @@ RSpec.describe 'Attendances API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/attendances', params: { checkin: nil } }
+      let(:invalid_attributes) { { checkin: nil, user_id: user.id.to_s }.to_json }
+      before { post '/attendances', params: invalid_attributes, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -82,10 +88,10 @@ RSpec.describe 'Attendances API', type: :request do
 
   # Test suite for PUT /attendances/:id
   describe 'PUT /attendances/:id' do
-    let(:valid_attributes) { { checkin: DateTime.now } }
+    let(:valid_attributes) { { checkin: DateTime.now, user_id: user.id.to_s }.to_json }
 
     context 'when the record exists' do
-      before { put "/attendances/#{attendance_id}", params: valid_attributes }
+      before { put "/attendances/#{attendance_id}", params: valid_attributes, headers: headers }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -99,7 +105,7 @@ RSpec.describe 'Attendances API', type: :request do
 
   # Test suite for DELETE /attendances/:id
   describe 'DELETE /attendances/:id' do
-    before { delete "/attendances/#{attendance_id}" }
+    before { delete "/attendances/#{attendance_id}", params: {}, headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
