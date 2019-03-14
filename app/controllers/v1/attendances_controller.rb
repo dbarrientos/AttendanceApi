@@ -12,18 +12,20 @@ class V1::AttendancesController < ApplicationController
       @attendances = Attendance.where(user: current_user)
       @attendances = @attendances.where(attendance_date: params[:a_date].to_date) if params[:a_date].present?
     end
-    json_response(@attendances)
+    json_response(@attendances.includes(:user).to_json(include: {user: {only: [:firstname, :lastname, :email]}}))
+    
+    # render json: @attendances.includes(:user), include: [:user], fields: {user: [:first_name, :last_name, :dni, :email]}, status: :ok
   end
 
   # POST /attendances
   def create
     @attendance = Attendance.create!(attendance_params)
-    json_response(@attendance, :created)
+    json_response(@attendance.to_json(include: {user: {only: [:firstname, :lastname, :email]}}), status: :created)
   end
 
   # GET /attendances/:id
   def show
-    json_response(@attendance)
+    json_response(@attendance.to_json(include: {user: {only: [:firstname, :lastname, :email]}}))
   end
 
   # PUT /attendances/:id
