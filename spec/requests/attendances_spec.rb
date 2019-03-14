@@ -4,6 +4,7 @@ RSpec.describe 'Attendances API', type: :request do
   # initialize test data 
   let!(:attendances) { create_list(:attendance, 10) }
   let(:attendance_id) { attendances.first.id }
+  let(:admin) { create(:user, role: 1) }
   let(:user) { create(:user) }
 
   let(:headers) { valid_headers }

@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
+  let(:admin) { create(:user, role: 1) }
   let(:user) { create(:user) }
   let(:headers) { valid_headers }
   let(:valid_attributes) do
-    attributes_for(:user, password_confirmation: user.password)
+    attributes_for(:user, password_confirmation: admin.password)
   end
   let(:users) { create_list(:user, 5) }
   let(:user_id) { users.last.id }

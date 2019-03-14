@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  authorize_resource
   # skip_before_action :authorize_request, only: :create
   
   # POST /signup
@@ -40,7 +41,8 @@ class UsersController < ApplicationController
       :name,
       :email,
       :password,
-      :password_confirmation
+      :password_confirmation,
+      :role
     )
   end
 end

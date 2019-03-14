@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     resources :attendances  
   end
   
-  post 'auth/login', to: 'authentication#authenticate'
+  post 'auth/admin_login', to: 'authentication#admin_authenticate'
+  post 'auth/user_login', to: 'authentication#employee_authenticate'
   resources :users, only: [:update, :destroy] 
   post 'signup', to: 'users#create'
 end

@@ -3,4 +3,6 @@ class User < ApplicationRecord
   has_many :attendances
   # Validations
   validates_presence_of :firstname, :lastname, :email, :password_digest
+
+  enum role: [:employee, :admin]
 end

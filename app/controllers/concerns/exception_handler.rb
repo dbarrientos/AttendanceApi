@@ -11,12 +11,14 @@ module ExceptionHandler
     # Define custom handlers
     rescue_from ActiveRecord::RecordInvalid, with: :four_twenty_two
     rescue_from ExceptionHandler::AuthenticationError, with: :unauthorized_request
+    rescue_from CanCan::AccessDenied, with: :unauthorized_request  
     rescue_from ExceptionHandler::MissingToken, with: :four_twenty_two
     rescue_from ExceptionHandler::InvalidToken, with: :four_twenty_two
-
-    rescue_from ActiveRecord::RecordNotFound do |e|
-      json_response({ message: e.message }, :not_found)
-    end
+    
+    rescue_from ActionController::UnknownController, with: :record_not_found
+    rescue_from ActionController::RoutingError, with: :record_not_found
+    rescue_from AbstractController::ActionNotFound, with: :record_not_found
+    rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   end
 
   private
@@ -29,6 +31,10 @@ module ExceptionHandler
   # JSON response with message; Status code 401 - Unauthorized
   def unauthorized_request(e)
     json_response({ message: e.message }, :unauthorized)
+  end
+
+  def record_not_found(e)
+    json_response({ message: e.message }, :not_found)
   end
   
 end
