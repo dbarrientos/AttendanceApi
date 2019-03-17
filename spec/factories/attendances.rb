@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :attendance do
-    checkin { DateTime.now.beginning_of_day }
+    checkin { Time.now.beginning_of_day }
+    attendance_date { Date.today }
     user
   end
 end

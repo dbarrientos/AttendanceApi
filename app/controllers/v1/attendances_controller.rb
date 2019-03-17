@@ -20,7 +20,7 @@ class V1::AttendancesController < ApplicationController
   # POST /attendances
   def create
     @attendance = Attendance.create!(attendance_params)
-    json_response(@attendance.to_json(include: {user: {only: [:firstname, :lastname, :email]}}), status: :created)
+    json_response(@attendance.to_json(include: {user: {only: [:firstname, :lastname, :email]}}), :created)
   end
 
   # GET /attendances/:id

@@ -57,13 +57,13 @@ RSpec.describe 'Attendances API', type: :request do
   describe 'POST /attendances' do
     # valid payload
     let(:valid_attributes) do
-      { checkin: DateTime.now.beginning_of_day, user_id: user.id.to_s }.to_json
+      { checkin: Time.now.beginning_of_day, user_id: user.id.to_s, attendance_date: Date.today }.to_json
     end
     context 'when the request is valid' do
       before { post '/attendances', params: valid_attributes, headers: headers  }
 
       it 'creates a attendance' do
-        expect(json['checkin']).to eq(DateTime.now.beginning_of_day.utc.iso8601(3))
+        expect(json['checkin'].to_time).to eq(Time.parse("2000-01-01").beginning_of_day)
         expect(json['user_id']).to eq(user.id)
       end
 
@@ -89,7 +89,7 @@ RSpec.describe 'Attendances API', type: :request do
 
   # Test suite for PUT /attendances/:id
   describe 'PUT /attendances/:id' do
-    let(:valid_attributes) { { checkin: DateTime.now, user_id: user.id.to_s }.to_json }
+    let(:valid_attributes) { { checkin: Time.now, user_id: user.id.to_s, attendance_date: Date.today }.to_json }
 
     context 'when the record exists' do
       before { put "/attendances/#{attendance_id}", params: valid_attributes, headers: headers }
