@@ -15,3 +15,20 @@
               email: Faker::Internet.free_email,
               password: Faker::Internet.password(8))
 end
+
+User.create(firstname: "Administrador",
+  lastname: "Asistencias",
+  address: Faker::Address.full_address,
+  phone: Faker::PhoneNumber.cell_phone,
+  dni: Faker::ChileRut.full_rut,
+  email: "admin@email.com",
+  password: "admin1234",
+  role: "admin")
+
+User.create(firstname: "Usuario",
+  lastname: "Asistencias",
+  address: Faker::Address.full_address,
+  phone: Faker::PhoneNumber.cell_phone,
+  dni: Faker::ChileRut.full_rut,
+  email: "user@email.com",
+  password: "user1234")
