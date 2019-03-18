@@ -13,6 +13,10 @@ class AuthenticateUser
     user.admin? if user
   end
 
+  def uid
+    user.id if user
+  end
+
   private
 
   attr_reader :email, :password

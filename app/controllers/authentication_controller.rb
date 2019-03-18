@@ -5,7 +5,8 @@ class AuthenticationController < ApplicationController
     au = AuthenticateUser.new(auth_params[:email], auth_params[:password])
     if au.admin?
       auth_token = au.call
-      json_response(auth_token: auth_token)
+      uid = au.uid
+      json_response({auth_token: auth_token, uid: uid})
     else
       response = { message: Message.unauthorized}
       json_response(response, :unauthorized)
@@ -15,7 +16,8 @@ class AuthenticationController < ApplicationController
   def employee_authenticate
     au = AuthenticateUser.new(auth_params[:email], auth_params[:password])
     auth_token = au.call
-    json_response(auth_token: auth_token)
+    uid = au.uid
+    json_response({auth_token: auth_token, uid: uid})
   end
 
   private

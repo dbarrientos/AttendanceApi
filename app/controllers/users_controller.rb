@@ -8,7 +8,10 @@ class UsersController < ApplicationController
     @users = []
     if current_user.admin?
       @users = User.all
-      @users = @users.where(role: params[:rl].to_i) if params[:rl].present?
+      @users = @users.where("users.firstname like ?", "%#{params[:firstname]}%") if params[:firstname].present?
+      @users = @users.where("users.lastname like ?", "%#{params[:lastname]}%") if params[:lastname].present?
+      @users = @users.where("users.dni like ?", "%#{params[:dni]}%") if params[:dni].present?
+      @users = @users.where(role: params[:rl]) if params[:rl].present?
     end
     json_response(@users.to_json(only: [:id, :firstname, :lastname, :email, :role, :dni, :address, :phone]))
   end
