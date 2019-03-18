@@ -4,6 +4,20 @@ class UsersController < ApplicationController
   
   # POST /signup
   # return authenticated token upon signup
+  def index
+    @users = []
+    if current_user.admin?
+      @users = User.all
+      @users = @users.where(role: params[:rl].to_i) if params[:rl].present?
+    end
+    json_response(@users.to_json(only: [:id, :firstname, :lastname, :email, :role, :dni, :address, :phone]))
+  end
+
+  def show
+    user = User.find(params[:id])
+    json_response(user.to_json(only: [:id, :firstname, :lastname, :email, :role, :dni, :address, :phone]))
+  end
+
   def create
     user = User.create!(user_params)
     auth_token = AuthenticateUser.new(user.email, user.password).call

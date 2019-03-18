@@ -8,9 +8,11 @@ class V1::AttendancesController < ApplicationController
       @attendances = Attendance.all
       @attendances = @attendances.where(user_id: params[:usr].to_i) if params[:usr].present?
       @attendances = @attendances.where(attendance_date: params[:a_date].to_date) if params[:a_date].present?
+      @attendances = @attendances.where(attendance_date: params[:a_date_from].to_date..params[:a_date_to].to_date) if params[:a_date_from].present? && params[:a_date_to].present?
     else
       @attendances = Attendance.where(user: current_user)
       @attendances = @attendances.where(attendance_date: params[:a_date].to_date) if params[:a_date].present?
+      @attendances = @attendances.where(attendance_date: params[:a_date_from].to_date..params[:a_date_to].to_date) if params[:a_date_from].present? && params[:a_date_to].present?
     end
     json_response(@attendances.includes(:user).to_json(include: {user: {only: [:firstname, :lastname, :email]}}))
     
